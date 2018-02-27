@@ -1,0 +1,160 @@
+# File describes config of each device including its properties, the server and physical card output
+
+Photodetector 1:
+    server: photodetector
+    properties:
+        'NI6250' : 0
+        
+Probe Lock:
+    server: lock
+    properties:
+        'frequency step' : ['Card','PB','PB1',3]
+        'frequency ramp' : ['Card','PB','PB1',2]
+
+MOT AOM:
+    server: aom
+    properties:
+        'power' : ['Card','NI','B', 6]
+        'on' : ['Card','PB','PB1', 20]
+
+Repump AOM:
+    server: aom
+    properties:
+        'power' : ['Card','NI','B', 5]
+        'on' : ['Card','PB','PB1', 19]
+
+Zeeman AOM:
+    server: aom
+    properties:
+        'power' : ['Card','NI','B', 7]
+        'on' : ['Card','PB','PB1', 12]
+        
+Imaging AOM:
+    server: aom
+    properties:
+        'power' : ['Card','NI','B', 3]
+        'on' : ['Card','PB','PB1', 13]
+
+MOT Coils:
+    server: coils
+    properties:
+        'Volt' : ['Card','NI','C',4]
+        'on' : ['Card','PB','PB1',4]
+
+X bias Coils:
+    server: coils
+    properties:
+        'Volt' : ['Card','NI','C',0]
+
+Small X bias Coils:
+    server: coils
+    properties:
+        'Volt' : ['Card','NI','C',1]
+
+
+Y bias Coils:
+    server: coils
+    properties:
+        'Volt' : ['Card','NI','C',2]
+
+Z bias Coils:
+    server: coils
+    properties:
+        'Volt' : ['Card','NI','C',3]
+
+####Change !!!!!!!!!!! ##########
+cam:
+    server: coils
+    properties:
+        'trig' : ['Card','PB','PB1',5]
+
+        
+SPCM 1:
+    server: coils
+    properties:
+        'on' : ['Card','PB','PB1',21]
+        'gate' : ['Card','PB','PB1',6]
+        
+
+Counting Card:
+    server: coils
+    properties:
+        'Gate' : ['Card','PB','PB1',7]
+        
+####################################
+
+Dipole Trap AOM D2:
+    server: aom
+    properties:
+        'on' : ['Card','PB','PB1',16]
+        'power' : ['Card','NI','C', 7]
+
+Dipole Trap AOM D1:
+    server: aom
+    properties:
+        'on' : ['Card','PB','PB1',15]
+        'power' : ['Card','NI','B', 2]
+
+Probe AOM:
+    server: aom
+    properties:
+        'on' : ['Card','PB','PB1',18]
+        'ARB Trig' : ['Card','PB','PB1',22]
+        'power' : ['Card','NI','B', 4]
+
+
+Control AOM:
+    server: aom
+    properties:
+        'on' : ['Card','PB','PB1',14]
+        'power' : ['Card','NI','B', 0]
+        
+Control EOM:
+    server: eom
+    properties:
+        'freq' : ['USB'] 
+        
+Repump lock:
+    server: lock
+    properties:
+        'freq' : ['Card+Arduino','PB','PB1',11,'COM3', 2] 
+        'reset' : ['Card','PB','PB1',10]
+        
+MOT lock:
+    server: lock
+    properties: 
+        'freq' : ['Card+Arduino','PB','PB1',9, 'COM3', 1]
+        'reset' : ['Card','PB','PB1',8]
+
+Ground Control AOM:
+    server: aom
+    properties:
+        'on' : ['Card','PB','PB1', 17]
+        'power' : ['Card','NI','B', 1]
+
+####Change !!!!!!!!!!! ##########
+        
+Zeeman EOM:
+    server: aom 
+    properties:
+        'freq reset' : ['Card','PB','PB1',0]
+        'freq step' : ['Card','PB','PB1', 1]
+        'power' : ['Card','NI','C', 5]
+
+
+######### Check these values #######
+
+Field Plates:
+    server: fieldplates
+    properties:
+        'Vx': ['Card','NI','A']
+        'Vy': ['Card','NI','A']
+        'Vz': ['Card','NI','A']
+        'grad': ['Card','NI','A']
+        'offset': ['Card','NI','A']
+
+
+
+####################################
+
+          

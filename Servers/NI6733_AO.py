@@ -248,8 +248,8 @@ class NI6733_AO(LabradServer):
                     self.taskHandleA,
                     channel_string_A,     # physicalChannel
                     "",                 # nameToAssignChannel
-                    float64(-5.0),     # min output V  
-                    float64(5.0),      # max output V
+                    float64(-1.0),     # min output V  
+                    float64(1.0),      # max output V
                     DAQmx_Val_Volts,    # units
                     None)               # customScaleName               
                 )

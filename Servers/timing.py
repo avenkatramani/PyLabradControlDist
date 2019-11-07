@@ -91,6 +91,7 @@ class TimingServer(LabradServer):
     @setting(10, ddf='s')
     def update_df(self,c,ddf): 
         self.df = pd.DataFrame.from_dict(eval(ddf))
+        self.create_sequence_length_list()
         self.dfUpdated = 1
      
     @setting(11) 
@@ -155,13 +156,12 @@ class TimingServer(LabradServer):
         temp = dt.datetime.now()
         self.client.sequenceprogrammer.clearall()
         sequence_order_list = eval(sequence_order_list)
-             
             
         if sequence_order_list == self.sequence_order_list:
             1#self.client.cardprogrammer.load_cards() # self.updated_df) #It checks for emptyness in that function. Worry about updating later
         if 1 :  
             self.sequence_order_list = sequence_order_list
-            sequences_order = list(self.get_sequences_from_order_list(sequence_order_list)) # Ordered list of sequences based on the order list
+            sequences_order = list(self.get_sequences_from_order_list(sequence_order_list)) # Ordered list of sequences based on the order list 
             sequences = list(np.unique(sequences_order))
             device_dict = self.get_device_list()
             devices = list(device_dict.keys())
@@ -265,7 +265,8 @@ class TimingServer(LabradServer):
             
 
             self.client.sequenceprogrammer.update_receive_list(str(sequences), str(devices), str(new_sequence_order_list), str(self.sequence_length_list)) #This function tells the card programmer what to expect
-        print('Sequence processing time :' + str((dt.datetime.now() - temp)))        
+        print('Sequence processing time :' + str((dt.datetime.now() - temp)))     
+        
     
     onNotification = Signal(1234, 'signal: test', 's')
     @setting(20, message='s')

@@ -21,7 +21,7 @@ timeout = 5
 
 from labrad.server import LabradServer, setting,  Signal
 from multiprocessing import Process
-from plotting_class_pyqtgraph import plot_pyqtgraph
+from plotting_class_pyqtgraph_SC import plot_pyqtgraph
 import numpy as np
 import datetime as dt
 import ujson as json 
@@ -48,12 +48,19 @@ class Plotter(LabradServer):
     @setting(1, data='s', plot_ID = 'w')     
     def plot(self, c, data, plot_ID):
         self.process_data(data, plot_ID) 
-        self.onNotification_p(json.dumps([plot_ID,self.plot_data[str(plot_ID)]]))  
+        if self.plot_data[str(plot_ID)]['plot_type'] == 'Camera':
+            self.onNotification_p(json.dumps([plot_ID,'Camera',self.plot_data[str(plot_ID)]]))
+        elif self.plot_data[str(plot_ID)]['plot_type'] == 'Side Camera':
+            self.onNotification_p(json.dumps([plot_ID,'Side Camera',self.plot_data[str(plot_ID)]]))
+        elif self.plot_data[str(plot_ID)]['plot_type'] == 'Basler Camera':
+            self.onNotification_p(json.dumps([plot_ID,'Basler Camera',self.plot_data[str(plot_ID)]]))
+        else :
+            self.onNotification_p(json.dumps([plot_ID,'Not Camera',self.plot_data[str(plot_ID)]]))
         
     onNotification_s = Signal(543618, 'signal: save', 's')    
     @setting(2, plot_ID = 'w', save_path = 's', save_prefixes = 's')     
     def save(self, c, plot_ID, save_path, save_prefixes): 
-        self.onNotification_s(json.dumps([save_path,eval(save_prefixes)]))  
+        self.onNotification_s(json.dumps([save_path,eval(save_prefixes),plot_ID]))  
         
         
     def process_data(self, data, plot_ID):
@@ -76,7 +83,7 @@ class Plotter(LabradServer):
             for source in sources:
                 self.plot_data[plot_ID]['data_raw'][source].append(data[source])
                 #Keeping say 20 points
-                if len(self.plot_data[plot_ID]['data_raw'][source]) > 100*averages :
+                if len(self.plot_data[plot_ID]['data_raw'][source]) > 500*averages :
                     self.plot_data[plot_ID]['data_raw'][source] = self.plot_data[plot_ID]['data_raw'][source][averages::] #keep removing the first element
                 
                 data_len = len(self.plot_data[plot_ID]['data_raw'][source])
@@ -115,8 +122,7 @@ class Plotter(LabradServer):
                 data_avg = np.array(data_plot[0::averages])
                 for count in xrange(averages-1):
                     data_avg += np.array(data_plot[count+1::averages])
-                        #data_avg += np.pad(temp,(0,len_0-len(temp)),'constant')
-                    
+                        
                 data_avg /= averages
                 self.plot_data[plot_ID]['data'][source] = data_avg.tolist()
                 
@@ -153,10 +159,11 @@ class Plotter(LabradServer):
                     self.plot_data[plot_ID]['data'][source] = data_avg.tolist()
                 
                 
-        if self.plot_data[plot_ID]['plot_type'] == 'Camera':
-            with open('X:\Our Programs\New Labrad Setup\PyLabradControl\TEMP\\'+data, 'r') as infile:
-                self.plot_data[plot_ID]['data'] = json.load(infile)
-            
+        if (self.plot_data[plot_ID]['plot_type'] == 'Camera') or (self.plot_data[plot_ID]['plot_type'] == 'Side Camera') or (self.plot_data[plot_ID]['plot_type'] == 'Basler Camera') :
+            self.plot_data[plot_ID]['data'] = {}
+            self.plot_data[plot_ID]['data']['Location'] = 'X:\Our Programs\New Labrad Setup\PyLabradControl\TEMP\\'+data
+                
+      
             
 
         

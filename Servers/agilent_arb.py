@@ -49,6 +49,31 @@ class Agilent_Arb(LabradServer):
         self.inst.write("APPL:DC DEF,DEF, %.4f" % V)
         self.inst.write("OUTP ON")
         
+    @setting(5,'gated_sine',Vamp='v',Voff='v',freq='v')
+    def gated_sine(self,c,Vamp,Voff, freq):
+        command_strings = []
+        command_strings.append(r':FUNC SIN')
+        command_strings.append(r':VOLT %.4f V' % Vamp) #Vpp
+        command_strings.append(r':FREQ %.4f' % freq) #Hz
+        command_strings.append(r' :VOLT:OFFS %.4f V' % Voff)
+        command_strings.append(r':TRIG:SOUR EXT')
+        command_strings.append(r':TRIG:DEL MIN')
+        command_strings.append(r':TRIG:SLOP POS')
+        command_strings.append(r':OUTP:LOAD INF')
+        command_strings.append(r':BURS:STAT ON')
+        command_strings.append(r':BURS:MODE GAT')
+        command_strings.append(r':BURS:GATE:POL NORM')
+        command_strings.append(r':OUTP ON')
+        
+        command_total = ''
+        for s in command_strings:
+            command_total += (s + ';')
+            
+        print command_total
+            
+        self.inst.write(command_total)
+        
+        
     @setting(3,'square_pulse',Vhigh='v',period='v',width='v',edge='v')
     def square_pulse(self,c,Vhigh,period,width,edge):
         
@@ -62,7 +87,7 @@ class Agilent_Arb(LabradServer):
         command_strings.append(r':BURS:STAT ON')
         command_strings.append(r':BURS:NCYC 1')
         command_strings.append(r':BURS:MODE TRIG')
-        command_strings.append(r':OUTP:LOAD 50')
+        command_strings.append(r':OUTP:LOAD INF')
         
         command_strings.append(r':VOLT:RANG:AUTO ON')
         

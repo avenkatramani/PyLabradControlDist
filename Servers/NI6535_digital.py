@@ -122,7 +122,7 @@ class NI6535_Digital(LabradServer):
             
         for channel in channels:
             processed_data += data[channel]['Value'] * 2**channel   
-            
+        
         return processed_data
          
     def insert_ramps(self, data_dict):

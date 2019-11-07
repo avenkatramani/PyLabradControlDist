@@ -16,7 +16,7 @@ MOT AOM:
     properties:
         'power' : ['Card','NI','B', 6]
         'on' : ['Card','PB','PB1', 20]
-
+        
 Repump AOM:
     server: aom
     properties:
@@ -39,24 +39,26 @@ MOT Coils:
     server: coils
     properties:
         'Volt' : ['Card','NI','C',4]
-        'on' : ['Card','PB','PB1',4]
+        #'on' : ['Card','PB','PB1',4]
+        'Switch on' : ['Card','NI','C',0]
 
 X bias Coils:
     server: coils
     properties:
-        'Volt' : ['Card','NI','C',0]
+        'Volt' : ['Card','NI','D1',10] # Temp
 
-Small X bias Coils:
+Big X bias Coils:
     server: coils
     properties:
         'Volt' : ['Card','NI','C',1]
+        'HV' : ['Soft Control']
 
 
 Y bias Coils:
     server: coils
     properties:
         'Volt' : ['Card','NI','C',2]
-
+        
 Z bias Coils:
     server: coils
     properties:
@@ -67,13 +69,33 @@ cam:
     server: coils
     properties:
         'trig' : ['Card','PB','PB1',5]
-
         
+        
+Repump Shutter:
+    server: coils
+    properties:
+        'Volt' : ['Card','NI','C',6]
+        
+MOT Shutter:
+    server: coils
+    properties:
+        'Volt' : ['Card','NI','C', 5]
+        
+Imaging Shutter:
+    server: coils
+    properties:
+        'Volt' : ['Card','NI','B', 4]
+           
 SPCM 1:
     server: coils
     properties:
         'on' : ['Card','PB','PB1',21]
         'gate' : ['Card','PB','PB1',6]
+        
+SPCM fake:
+    server: coils
+    properties:
+        'gate' : ['Card','PB','PB1',23]
         
 
 Counting Card:
@@ -83,13 +105,13 @@ Counting Card:
         
 ####################################
 
-Dipole Trap AOM D2:
+852 Dipole Trap:
     server: aom
     properties:
         'on' : ['Card','PB','PB1',16]
         'power' : ['Card','NI','C', 7]
 
-Dipole Trap AOM D1:
+1064 Dipole Trap:
     server: aom
     properties:
         'on' : ['Card','PB','PB1',15]
@@ -100,8 +122,12 @@ Probe AOM:
     properties:
         'on' : ['Card','PB','PB1',18]
         'ARB Trig' : ['Card','PB','PB1',22]
-        'power' : ['Card','NI','B', 4]
+        #'power' : ['Card','NI','D1', 1]
 
+Arb 2:
+    server: aom
+    properties:
+        'ARB Trig' : ['Card','PB','PB1',4]
 
 Control AOM:
     server: aom
@@ -137,10 +163,14 @@ Ground Control AOM:
 Zeeman EOM:
     server: aom 
     properties:
-        'freq reset' : ['Card','PB','PB1',0]
+        #'freq reset' : ['Card','PB','PB1',0]
         'freq step' : ['Card','PB','PB1', 1]
-        'power' : ['Card','NI','C', 5]
+        'on' : ['Card','NI','D1', 0]
 
+MW On:
+    server: aom 
+    properties:
+        'on' : ['Card','PB','PB1',0]   
 
 ######### Check these values #######
 
@@ -150,7 +180,9 @@ Field Plates:
         'Vx': ['Card','NI','A']
         'Vy': ['Card','NI','A']
         'Vz': ['Card','NI','A']
-        'grad': ['Card','NI','A']
+        'Gx': ['Card','NI','A']
+        'Gy': ['Card','NI','A']
+        'Gz': ['Card','NI','A']
         'offset': ['Card','NI','A']
 
 

@@ -82,8 +82,11 @@ class FieldPlatesServer(LabradServer):
             Vx = np.zeros(length)
             Vy = np.zeros(length)
             Vz = np.zeros(length)
-            grad = np.zeros(length)
+            Gx = np.zeros(length)
+            Gy = np.zeros(length)
+            Gz = np.zeros(length)
             offset = np.zeros(length)
+
             for prop in properties:
                 if prop == 'Vx':
                     temp = df.xs('Vx')
@@ -94,17 +97,26 @@ class FieldPlatesServer(LabradServer):
                 if prop == 'Vz':
                     temp = df.xs('Vz')
                     Vz =  np.array(temp['Value'])
+                if prop == 'Gx':
+                    temp = df.xs('Gx')
+                    Gx =  np.array(temp['Value'])
+                if prop == 'Gy':
+                    temp = df.xs('Gy')
+                    Gy =  np.array(temp['Value'])
+                if prop == 'Gz':
+                    temp = df.xs('Gz')
+                    Gz =  np.array(temp['Value'])
                     
         
             for ix, time in enumerate(times):
-                card_df.ix[(prop_values[1], prop_values[2], sequence, 0, time)] = [0, Vy[ix] - Vz[ix]]
-                card_df.ix[(prop_values[1], prop_values[2], sequence, 1, time)] = [0, Vx[ix] - Vz[ix]]
-                card_df.ix[(prop_values[1], prop_values[2], sequence, 2, time)] = [0, -Vy[ix] - Vz[ix]]
-                card_df.ix[(prop_values[1], prop_values[2], sequence, 3, time)] = [0, -Vx[ix] - Vz[ix]]
-                card_df.ix[(prop_values[1], prop_values[2], sequence, 4, time)] = [0, Vy[ix] + Vz[ix]]
-                card_df.ix[(prop_values[1], prop_values[2], sequence, 5, time)] = [0, -Vx[ix] + Vz[ix]]
-                card_df.ix[(prop_values[1], prop_values[2], sequence, 6, time)] = [0, -Vy[ix] + Vz[ix]]
-                card_df.ix[(prop_values[1], prop_values[2], sequence, 7, time)] = [0, Vx[ix] + Vz[ix]]
+                card_df.ix[(prop_values[1], prop_values[2], sequence, 0, time)] = [0,  Vy[ix] - Vz[ix] - Gy[ix] ]
+                card_df.ix[(prop_values[1], prop_values[2], sequence, 1, time)] = [0,  Vx[ix] - Vz[ix] - Gx[ix] ]
+                card_df.ix[(prop_values[1], prop_values[2], sequence, 2, time)] = [0, -Vy[ix] - Vz[ix] + Gy[ix] ]
+                card_df.ix[(prop_values[1], prop_values[2], sequence, 3, time)] = [0, -Vx[ix] - Vz[ix] + Gx[ix] ]
+                card_df.ix[(prop_values[1], prop_values[2], sequence, 4, time)] = [0,  Vy[ix] + Vz[ix] + Gy[ix] ]
+                card_df.ix[(prop_values[1], prop_values[2], sequence, 5, time)] = [0, -Vx[ix] + Vz[ix] - Gx[ix] ]
+                card_df.ix[(prop_values[1], prop_values[2], sequence, 6, time)] = [0, -Vy[ix] + Vz[ix] - Gy[ix] ]
+                card_df.ix[(prop_values[1], prop_values[2], sequence, 7, time)] = [0,  Vx[ix] + Vz[ix] + Gx[ix] ]
                                        
                                    
         else :

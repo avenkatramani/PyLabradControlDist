@@ -45,7 +45,7 @@ class tds2014c_a(LabradServer):
     def initServer(self):
     # runs when server launches. Should establish connection
         rm = visa.ResourceManager() 
-        visaname = "TDS2014C_A" 
+        visaname = "USB0::0x0699::0x03A4::C031389::INSTR" #"TDS2014C_A" 
         print "Opening connection to oscilloscope : " + visaname 
         self.inst = rm.get_instrument(visaname)
         print str(self.inst.query('*IDN?'))
@@ -127,6 +127,17 @@ class tds2014c_a(LabradServer):
         dev = self.inst
         dev.write('MEASU:IMM:SOU CH%d' %channel)
         dev.write('MEASU:IMM:TYP MEAN')
+        resp = dev.query('MEASU:IMM:VAL?')
+        val0 = float(eval(resp))
+        return(val0)
+        
+    @setting(24,"Vmax", channel = 'i', returns = 'v[]')
+    def Vmax(self, c, channel):
+        """Get mean measurement of channel i
+        """
+        dev = self.inst
+        dev.write('MEASU:IMM:SOU CH%d' %channel)
+        dev.write('MEASU:IMM:TYP MAX')
         resp = dev.query('MEASU:IMM:VAL?')
         val0 = float(eval(resp))
         return(val0)

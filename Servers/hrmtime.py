@@ -136,7 +136,7 @@ class HRMTime(LabradServer):
         output_chs = numpy.array( [x[0] for x in self.proc_output],dtype=ctypes.c_ubyte)
         output_times = numpy.array( [x[1] for x in self.proc_output],dtype=ctypes.c_double)
         output_gates = numpy.array( [x[2] for x in self.proc_output],dtype=ctypes.c_ushort)
-        output_cycles = numpy.array( [x[3] for x in self.proc_output],dtype=ctypes.c_ushort)
+        output_cycles = numpy.array( [x[3]for x in self.proc_output],dtype=ctypes.c_ushort)
         output_dict =  { 'ch':output_chs,
                          'times': output_times,
                          'gates': output_gates,

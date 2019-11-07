@@ -21,6 +21,7 @@ from ctypes import *
 import os
 import psutil
 import datetime as dt
+import time
 
 ########### nidaq.h types and constants
 # set up c type names
@@ -70,12 +71,10 @@ class Unibrain:
         self.columns = int32(0)
 		
     def setAttributes(self): #Making it all in one for now, split it for programming each attribute
-        self._checkdx(self.imaqdx.IMAQSetAttribute(self.sid, ))
+        self._checkdx(self.imaqdx.IMAQSetAttribute(self.sid ))
     
-    def setImaqRetType(self):
-        
-       #self.imaq.imaqImageToArray.restype = np.ctypeslib.ndpointer(dtype=np.ubyte, shape = (1024, 1024), ndim=2)
-	self.imaq.imaqImageToArray.restype = POINTER(c_ubyte)
+    def setImaqRetType(self): 
+       self.imaq.imaqImageToArray.restype = POINTER(c_ubyte)
 		
         
     def closeAll(self):
@@ -89,10 +88,13 @@ class Unibrain:
         
     def setupCamera(self):
         self._checkdx(self.imaqdx.IMAQdxOpenCamera(cam, 0, byref(self.sid))) #0 is controller mode, 1 is listener mode, (const char *name, IMAQdxCameraControlMode mode, IMAQdxSession *id)
-        self._checkdx(self.imaqdx.IMAQdxConfigureAcquisition(self.sid, 1, 1)) #(IMAQdxSession id, unsigned int continuous, unsigned int bufferCount)
-
+        print("Session ID :" + str(self.sid))
+        self._checkdx(self.imaqdx.IMAQdxConfigureAcquisition(self.sid, 1, 2)) #(IMAQdxSession id, unsigned int continuous, unsigned int bufferCount)
+        
     def startCamera(self):
         self._checkdx(self.imaqdx.IMAQdxStartAcquisition(self.sid))
+        
+        
         
     def stopCamera(self):   #Not the right way to deal with errors. modify it .....
         try:
@@ -113,16 +115,29 @@ class Unibrain:
             pass
         
     def grabImage(self, img_name): 
-    
+        #time.sleep(0.1) #wait for image taken during imaging stage to be moved to the buffer. 100 ms is just about enough
+                        #A smarter way is to wait for next buffer instead of using a fixed delay as done now
+        
         actualBufferNumber = uInt32(0)
-        self._checkdx(self.imaqdx.IMAQdxGrab(self.sid, self.image[img_name], uInt32(0), byref(actualBufferNumber))) #(IMAQdxSession id, Image *image, unsigned int waitForNextBuffer, unsigned int *actualBufferNumber)
+        desiredBufferNumber = uInt32(0)
+        #self._checkdx(self.imaqdx.IMAQdxGrab(self.sid, self.image[img_name], uInt32(0), byref(actualBufferNumber))) #(IMAQdxSession id, Image *image, unsigned int waitForNextBuffer, unsigned int *actualBufferNumber)
+        #print actualBufferNumber
+        
+        self._checkdx(self.imaqdx.IMAQdxGetImage(self.sid, self.image[img_name], uInt32(1), desiredBufferNumber, byref(actualBufferNumber))) #IMAQdxGetImage(IMAQdxSession id, Image* image, IMAQdxBufferNumberMode mode, uInt32 desiredBufferNumber, uInt32* actualBufferNumber)
+        print actualBufferNumber
+        
         img_array_buf = self.imaq.imaqImageToArray(self.image[img_name], self.IMAQ_RECT , byref(self.columns), byref(self.rows))
         img_array = np.zeros(1024*1024, dtype = np.ubyte)
         memmove(img_array.ctypes.data, img_array_buf, 1024*1024)
         self.imaq.imaqDispose(img_array_buf) #fixes memory leak
         img_array = img_array.reshape((1024,1024))
-        img_array = img_array[100:650, 300:850] #Cutting it short
+        img_array = img_array[237 : 787 , 237 :787] #Cutting it short
         img_array = img_array.astype(int)
+        
+        
+        
+        
+        
         return img_array
      
     def _check(self, ret):

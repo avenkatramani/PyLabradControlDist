@@ -489,7 +489,7 @@ class Sequence_Programmer_Server(LabradServer):
                     delay_list = np.append(delay_list, delays[-1]* 1000000000.0 - (2.0)*stop_len)
                     delay_list = np.append(delay_list, np.zeros(stop_len))
                 
-                       
+              
         return [PB_loop_list , instruction_list, delay_list]
         
 
@@ -560,9 +560,9 @@ class Sequence_Programmer_Server(LabradServer):
         channel_list = []
         instruction_list = []
         
-        for time in time_list[0:-1]: #skipping the last time
+        for time_i in time_list[0:-1]: #skipping the last time
             
-            current_value = data.xs(time)
+            current_value = data.xs(time_i)
             channel_list.append(list(current_value.index.get_level_values(0)))
             value_list.append(list(np.transpose(current_value.as_matrix(columns=['Value']))[0]))
         

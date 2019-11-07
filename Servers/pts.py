@@ -100,7 +100,7 @@ class PTS(LabradServer):
     @setting(8, "uploadBIT", device='s', mode ='s')
     def uploadBIT(self, c, device, mode):
         """ Upload appropriate BIT file to Opal Kelly FPGAs that control PTS synth"""
-        if device=='Probe':
+        if (device == 'Probe' or device =='probe'):
             if mode == 'slow':
                 path = self.slowBIT 
             elif mode == 'fastUP':
@@ -112,7 +112,7 @@ class PTS(LabradServer):
             self._check(self.oklib.okFrontPanel_LoadDefaultPLLConfiguration(self.hndProbe))
             self._check(self.oklib.okFrontPanel_ConfigureFPGA(self.hndProbe, path))
          
-        elif device =='Control':
+        elif (device == 'Control' or device == 'control'):
             if mode == 'slow':
                 path = self.slowBIT 
             elif mode == 'fastUP':
